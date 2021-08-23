@@ -1,0 +1,75 @@
+Zdani - vytvoreni parseru pro logy NF 5G 
+========================================
+
+Vytvoreni scriptu v jazyce python3 ktery nacte a rozparsuje textovy log soubor a pak podle uzivatelske volby vypise na vystup pozadovane zaznamy.
+
+Vstup:
+======
+   Jako jediny parametr bude nazev souboru obsahujici log, nebo minus ("-") pro nacteni dat z stdin. 
+
+Zpracovani:
+===========
+    Script interne prepracuje textovy vstup na libovonou vhodnou datovou implementaci v pameti pro rychle nasledne zpracovani. Vadne zaznamy ohlasi.
+    
+Prikazova radka:
+================
+
+    Script po nacteni souboru vypise kratke menu v kterem se bude dat navigovat pomoci stisku klaves (0-5, q) a zadavat tak moznosti vystupu.
+    --------------------------8<---------------
+    0. vystup [module, text, logLevel]
+    1. soubor
+    2. modul
+    3. casovy interval
+    4. loglevel
+    5. fulltext / regex
+    q. konec
+    
+    prikaz [?]:
+    --------------------------8<--------------- 
+    
+    Volba:
+        0 - uzivatel vlozi seznam carkuo oddelenych poli, ktere bude pozadovat na vystupu. Seznam moznosti je na konci 
+            zadani u prikladu radku.
+        1 - script vyzve uzivatele k zadani nazvu souboru
+          - script vypise vsechny zaznamy ktere obsahuji dany soubor v JSON formatu, kdy kazdy zaznam bude obsahovat
+            ty casti logu ktere jsou zadane v polozce (0 - vystup)
+        2 - script vyzve uzivatele k zadani nazvu modulu
+          - vypise stejny vystup jako v prvnim pripade jenom vybere zaznamy pro dany modul
+        3 - script vyzve uzivatele k zadani casove (datum a cas) intervalu a vypise zaznamy z tohoto rozsahu, nebo zahlasi 
+            chybu ze nebyl nalezen zadny zaznam.
+        4 - script vyzve uzivatele k vyberu logLevelu a vypise vsechny zaznamy s danym logLevelem.
+        5 - script vyzve uzivatele k zadani textu ktery pak bude hledat ve vsech castech zaznamu a vypise ty ktery zadany
+            text obsahuji. Jako vstup muze byt regularni vyraz.
+        q - ukonci script
+
+Format vystupu: pro [module, text, logLevel]
+===============
+
+            {[
+               {
+                "module": "AUSF",
+                "text": "Mandatory properies error: no fqdn.",
+                "logLevel": "ER"
+                },
+               {
+                "module": "CONFIG_API",
+                "text": "[NATS-CONFIG][NotConfigured][PUBLISH][SUCESS]",
+                "logLevel": "CR"
+                },
+                {...}
+            ]}
+            
+            
+Format radku log souboru.
+=========================
+
+[000001][164116][3ead52c0] 16/08 11:04:59.352 AUSF ER - Mandatory properies error: no fqdn. <AusfConfigManager.cpp,185>
+^---------------------------------------------------------------------------------------------------------------------- recordId
+        ^-------------------------------------------------------------------------------------------------------------- PID
+                ^------------------------------------------------------------------------------------------------------ threadId
+                           ^------------------------------------------------------------------------------------------- datum a cas
+                                              ^------------------------------------------------------------------------ module
+                                                   ^------------------------------------------------------------------- logLevel
+                                                        ^-------------------------------------------------------------- text
+                                                                                             ^------------------------- srcFile
+                                                                                                                   ^--- srcFileLine 
