@@ -115,7 +115,8 @@ class Parser:
                         continue
 
         else:
-            print("Provided input is not valid")
+            print("Provided input is not valid, exiting.")
+            sys.exit()
 
         print(f"Encountered {parser_errs} errors while parsing.")
         return output
@@ -261,7 +262,6 @@ class Parser:
 
 
 if __name__ == "__main__":
-    # argument = sys.argv[1]
-    # Parser(argument)
+    Parser(sys.argv[1])
 
-    Parser('stream.log')
+    # Parser('stream.log')
